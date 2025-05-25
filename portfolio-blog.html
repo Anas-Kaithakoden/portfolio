@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog - Anas</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fafafa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: #2563eb;
+        }
+
+        /* Main Content */
+        main {
+            padding-top: 100px;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            padding: 2rem 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.7rem 1.5rem;
+            border: 2px solid #e5e7eb;
+            background: white;
+            color: #666;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active,
+        .filter-btn:hover {
+            border-color: #2563eb;
+            background: #2563eb;
+            color: white;
+        }
+
+        /* Blog Section */
+        .blog-section {
+            padding: 4rem 0;
+        }
+
+        .blog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 3rem;
+            margin-bottom: 4rem;
+        }
+
+        .blog-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .blog-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 35px rgba(0,0,0,0.15);
+        }
+
+        .blog-card.hidden {
+            opacity: 0;
+            transform: scale(0.8);
+            pointer-events: none;
+        }
+
+        .blog-image {
+            height: 200px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .blog-icon {
+            font-size: 3rem;
+            color: white;
+            z-index: 2;
+            position: relative;
+        }
+
+        .blog-meta {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255,255,255,0.95);
+            color: #333;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 3;
+        }
+
+        .blog-reading-time {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.95);
+            color: #666;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            z-index: 3;
+        }
+
+        .blog-content {
+            padding: 2rem;
+        }
+
+        .blog-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .blog-excerpt {
+            color: #666;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+
+        .blog-topics {
+            margin-bottom: 1.5rem;
+        }
+
+        .blog-topics h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .topics-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .topic-item {
+            font-size: 0.9rem;
+            color: #666;
+            position: relative;
+            padding-left: 1rem;
+        }
+
+        .topic-item::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        .blog-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .tag {
+            background: #e2e8f0;
+            color: #475569;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .tag.primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .blog-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .blog-btn {
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: #2563eb;
+            color: white;
+        }
+
+        .blog-btn:hover {
+            transform: translateY(-2px);
+            background: #1d4ed8;
+        }
+
+        .blog-date {
+            color: #666;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        /* Newsletter Section */
+        .newsletter-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .newsletter-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .newsletter-content p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 1rem;
+            max-width: 400px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .newsletter-btn {
+            background: #1d4ed8;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .newsletter-btn:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .placeholder-badge {
+            background: rgba(251, 191, 36, 0.9);
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .page-title {
+                font-size: 2.5rem;
+            }
+
+            .blog-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .filter-buttons {
+                gap: 0.5rem;
+            }
+
+            .filter-btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+
+            .newsletter-content h2 {
+                font-size: 2rem;
+            }
+
+            .newsletter-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .newsletter-input {
+                min-width: unset;
+            }
+
+            .blog-footer {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="container">
+            <div class="logo">Anas</div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#blog" class="active">Blog</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">My Blog</h1>
+            <p class="page-subtitle">
+                Sharing my journey in technology, documenting lessons learned, and exploring 
+                the world of automation, DevOps, and software development
+            </p>
+        </div>
+    </section>
+
+    <!-- Filter Section -->
+    <section class="filter-section">
+        <div class="container">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-category="all">All Posts</button>
+                <button class="filter-btn" data-category="tutorials">Tutorials</button>
+                <button class="filter-btn" data-category="experiences">Experiences</button>
+                <button class="filter-btn" data-category="devops">DevOps</button>
+                <button class="filter-btn" data-category="automation">Automation</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        <section class="blog-section">
+            <div class="container">
+                <div class="blog-grid">
+                    <!-- Blog Post 1 -->
+                    <article class="blog-card" data-category="tutorials">
+                        <div class="blog-image">
+                            <div class="blog-icon">🖥️</div>
+                            <div class="blog-meta">Tutorial</div>
+                            <div class="blog-reading-time">8 min read</div>
+                        </div>
+                        <div class="blog-content">
+                            <h3 class="blog-title">How I Set Up KVM on Rocky Linux<span class="placeholder-badge">Coming Soon</span></h3>
+                            <p class="blog-excerpt">
+                                A comprehensive guide to setting up KVM virtualization on Rocky Linux, including 
+                              network configuration, storage management, and automation with Ansible playbooks.
+                            </p>
+                            <div class="blog-topics">
+                                <h4>What you'll learn:</h4>
+                                <div class="topics-list">
+                                    <div class="topic-item">KVM installation and configuration</div>
+                                    <div class="topic-item">Virtual network setup and management</div>
+                                    <div class="topic-item">Automating VM deployment with Ansible</div>
+                                    <div class="topic-item">Best practices for virtualization</div>
+                                </div>
+                            </div>
+                            <div class="blog-tags">
+                                <span class="tag primary">Rocky Linux</span>
+                                <span class="tag primary">KVM</span>
+                                <span class="tag">Virtualization</span>
+                                <span class="tag">Ansible</span>
+                                <span class="tag">Infrastructure</span>
+                            </div>
+                            <div class="blog-footer">
+                                <a href="#" class="blog-btn">Read More</a>
+                                <div class="blog-date">Coming Soon</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 2 -->
+                    <article class="blog-card" data-category="experiences">
+                        <div class="blog-image">
+                            <div class="blog-icon">💼</div>
+                            <div class="blog-meta">Experience</div>
+                            <div class="blog-reading-time">6 min read</div>
+                        </div>
+                        <div class="blog-content">
+                            <h3 class="blog-title">My First Freelance Project on Freelancer.com<span class="placeholder-badge">Coming Soon</span></h3>
+                            <p class="blog-excerpt">
+                                Lessons learned from my first freelance web scraping project, including client communication, 
+                                project scoping, and delivering professional Python automation solutions.
+                            </p>
+                            <div class="blog-topics">
+                                <h4>Key takeaways:</h4>
+                                <div class="topics-list">
+                                    <div class="topic-item">Getting started with freelancing</div>
+                                    <div class="topic-item">Project scoping and estimation</div>
+                                    <div class="topic-item">Client communication best practices</div>
+                                    <div class="topic-item">Delivering quality automation solutions</div>
+                                </div>
+                            </div>
+                            <div class="blog-tags">
+                                <span class="tag primary">Freelancing</span>
+                                <span class="tag primary">Python</span>
+                                <span class="tag">Web Scraping</span>
+                                <span class="tag">Selenium</span>
+                                <span class="tag">Career</span>
+                            </div>
+                            <div class="blog-footer">
+                                <a href="#" class="blog-btn">Read More</a>
+                                <div class="blog-date">Coming Soon</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 3 -->
+                    <article class="blog-card" data-category="tutorials">
+                        <div class="blog-image">
+                            <div class="blog-icon">📋</div>
+                            <div class="blog-meta">Tutorial</div>
+                            <div class="blog-reading-time">5 min read</div>
+                        </div>
+                        <div class="blog-content">
+                            <h3 class="blog-title">Understanding Ansible Inventory for Beginners<span class="placeholder-badge">Coming Soon</span></h3>
+                            <p class="blog-excerpt">
+                                A beginner-friendly guide to Ansible inventory files, host groups, variables, 
+                                and organizing your infrastructure for efficient automation.
+                            </p>
+                            <div class="blog-topics">
+                                <h4>Topics covered:</h4>
+                                <div class="topics-list">
+                                    <div class="topic-item">Inventory file structure and syntax</div>
+                                    <div class="topic-item">Host groups and patterns</div>
+                                    <div class="topic-item">Managing variables and host_vars</div>
+                                    <div class="topic-item">Dynamic inventory sources</div>
+                                </div>
+                            </div>
+                            <div class="blog-tags">
+                                <span class="tag primary">Ansible</span>
+                                <span class="tag primary">DevOps</span>
+                                <span class="tag">Automation</span>
+                                <span class="tag">Infrastructure</span>
+                                <span class="tag">YAML</span>
+                            </div>
+                            <div class="blog-footer">
+                                <a href="#" class="blog-btn">Read More</a>
+                                <div class="blog-date">Coming Soon</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 4 -->
+                    <article class="blog-card" data-category="automation">
+                        <div class="blog-image">
+                            <div class="blog-icon">🔐</div>
+                            <div class="blog-meta">Deep Dive</div>
+                            <div class="blog-reading-time">10 min read</div>
+                        </div>
+                        <div class="blog-content">
+                            <h3 class="blog-title">Building a Secure CLI Password Manager<span class="placeholder-badge">Coming Soon</span></h3>
+                            <p class="blog-excerpt">
+                                Technical deep dive into creating a command-line password manager with Python, 
+                                covering encryption, security best practices, and user experience design.
+                            </p>
+                            <div class="blog-topics">
+                                <h4>Technical insights:</h4>
+                                <div class="topics-list">
+                                    <div class="topic-item">AES-256 encryption implementation</div>
+                                    <div class="topic-item">Secure key derivation with PBKDF2</div>
+                                    <div class="topic-item">CLI interface design patterns</div>
+                                    <div class="topic-item">Database schema and security</div>
+                                </div>
+                            </div>
+                            <div class="blog-tags">
+                                <span class="tag primary">Python</span>
+                                <span class="tag primary">Security</span>
+                                <span class="tag">Cryptography</span>
+                                <span class="tag">CLI</span>
+                                <span class="tag">SQLite</span>
+                            </div>
+                            <div class="blog-footer">
+                                <a href="#" class="blog-btn">Read More</a>
+                                <div class="blog-date">Coming Soon</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 5 -->
+                    <article class="blog-card" data-category="devops">
+                        <div class="blog-image">
+                            <div class="blog-icon">🚀</div>
+                            <div class="blog-meta">Experience</div>
+                            <div class="blog-reading-time">7 min read</div>
+                        </div>
+                        <div class="blog-content">
+                            <h3 class="blog-title">My Journey with OpenAFS and GSoC<span class="placeholder-badge">Coming Soon</span></h3>
+                            <p class="blog-excerpt">
+                                Exploring my application process for Google Summer of Code with OpenAFS, 
+                                diving into distributed file systems and the world of open source contribution.
+                            </p>
+                            <div class="blog-topics">
+                                <h4>Journey highlights:</h4>
+                                <div class="topics-list">
+                                    <div class="topic-item">Understanding distributed file systems</div>
+                                    <div class="topic-item">Contributing to open source projects</div>
+                                    <div class="topic-item">GSoC application process</div>
+                                    <div class="topic-item">Building unit testing frameworks</div>
+                                </div>
+                            </div>
+                            <div class="blog-tags">
+                                <span class="tag primary">GSoC</span>
+                                <span class="tag primary">OpenAFS</span>
+                                <span class="tag">Open Source</span>
+                                <span class="tag">C Programming</span>
+                                <span class="tag">Unit Testing</span>
+                            </div>
+                            <div class="blog-footer">
+                                <a href="#" class="blog-btn">Read More</a>
+                                <div class="blog-date">Coming Soon</div>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- Blog Post 6 -->
+                    <article class="blog-card" data-category="automation">
+                        <div class="blog-image">
+                            <div class="blog-icon">📊</div>
+                            <div class="blog-meta">Tutorial</div>
+                            <div class="blog-reading-time">9 min read</div>
+                        </div>
+                        <div class="blog-content">
+                            <h3 class="blog-title">Web Scraping at Scale: Lessons Learned<span class="placeholder-badge">Coming Soon</span></h3>
+                            <p class="blog-excerpt">
+                                Practical insights from building production web scraping solutions, 
+                                handling dynamic content, rate limiting, and data processing pipelines.
+                            </p>
+                            <div class="blog-topics">
+                                <h4>Best practices:</h4>
+                                <div class="topics-list">
+                                    <div class="topic-item">Handling dynamic JavaScript content</div>
+                                    <div class="topic-item">Implementing rate limiting and retries</div>
+                                    <div class="topic-item">Data cleaning and validation</div>
+                                    <div class="topic-item">Monitoring and error handling</div>
+                                </div>
+                            </div>
+                            <div class="blog-tags">
+                                <span class="tag primary">Python</span>
+                                <span class="tag primary">Selenium</span>
+                                <span class="tag">Web Scraping</span>
+                                <span class="tag">BeautifulSoup</span>
+                                <span class="tag">Pandas</span>
+                            </div>
+                            <div class="blog-footer">
+                                <a href="#" class="blog-btn">Read More</a>
+                                <div class="blog-date">Coming Soon</div>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-content">
+                    <h2>Stay Updated</h2>
+                    <p>
+                        Subscribe to get notified when I publish new tutorials, project updates, 
+                        and insights from my journey in technology and automation.
+                    </p>
+                    <form class="newsletter-form">
+                        <input type="email" class="newsletter-input" placeholder="Enter your email address" required>
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Filter functionality
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const blogCards = document.querySelectorAll('.blog-card');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+
+                const category = button.getAttribute('data-category');
+
+                blogCards.forEach(card => {
+                    if (category === 'all' || card.getAttribute('data-category') === category) {
+                        card.classList.remove('hidden');
+                    } else {
+                        card.classList.add('hidden');
+                    }
+                });
+            });
+        });
+
+        // Newsletter form handling
+        document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('.newsletter-input').value;
+            if (email) {
+                alert('Thank you for subscribing! (This is a demo - newsletter functionality coming soon)');
+                this.querySelector('.newsletter-input').value = '';
+            }
+        });
+
+        // Smooth scroll for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
